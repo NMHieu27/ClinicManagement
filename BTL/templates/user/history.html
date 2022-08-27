@@ -1,0 +1,58 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Danh sách khám bệnh{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.user_role.name == 'USER' %}
+    <section>
+        <div class="container my-4">
+            <div class="d-flex justify-content-center">
+                <h1 class="text-uppercase">Lịch sử khám</h1>
+            </div>
+        </div>
+        <div class="container-fluid mb-5">
+            <table class="table table-hover a">
+                <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Họ tên</th>
+                      <th scope="col">Giới tính</th>
+                      <th scope="col">Năm sinh</th>
+                      <th scope="col">Địa chỉ</th>
+                      <th scope="col">SDT</th>
+                      <th scope="col">Ngày khám</th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in booking_list %}
+                        {% if booking.paided == True %}
+                            <tr>
+                              <th scope="row" class="count"></th>
+                              <td>{{ booking.name }}</td>
+                              <td>{{ booking.sex.name }}</td>
+                              <td>{{ booking.yearofbirth.strftime('%d-%m-%Y') }}</td>
+                              <td>{{ booking.address }}</td>
+                              <td>{{ booking.phonenumber}}</td>
+                              <td>{{ booking.ngaykham.strftime('%d-%m-%Y') }}</td>
+                              <td><a href="{{url_for('bill_detail', booking_id=booking.id)}}"><input type="button" id="active" value="Chi tiết" class="button-75"></a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% else %}
+    <section>
+          <br/> <br/>
+          <div class="container">
+              <div class="text-info text-center">
+                  <h1>BẠN KHÔNG CÓ QUYỀN TRUY CẬP</h1>
+              </div>
+          </div>
+          <br/> <br/>
+      </section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<section class="bg-light my-5">
+    <div class="mx-5 p-5 d-flex justify-content-around border-custom">
+        <div>
+            <img src="{{ url_for('static', filename='images/doctor1.png') }}"  class="res-pic">
+        </div>
+        <div class="login">
+        <h1 class="text-center text-danger">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
+        {% if err_msg %}
+        <div class="alert alert-danger">
+            <h2>{{ err_msg }}</h2>
+        </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('user_signin') }}" class="was-validated" >
+           <div class="form-group">
+            <div class="form-group">
+               <label for="username">Username</label>
+               <input type="text" name="username" class="form-control"
+                      id="username" placeholder="Nhập username..." required />
+               <div class="valid-feedback">Valid.</div>
+               <div class="invalid-feedback">Please fill out this field.</div>
+           </div>
+            <div class="form-group">
+               <label for="password">Mật khẩu</label>
+               <input type="password"
+                      name="password"
+                      class="form-control"
+                      id="password"
+                      placeholder="Nhập mật khẩu..." required />
+               <div class="valid-feedback">Valid.</div>
+               <div class="invalid-feedback">Please fill out this field.</div>
+           </div>
+            <input type="submit" value="Đăng nhập" class="btn btn-danger" />
+        </form>
+        <br><br>
+        </div>
+    </div>
+</section>
+{% endblock %}

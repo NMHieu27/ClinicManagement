@@ -1,0 +1,90 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng kí lịch khám{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.user_role.name == 'DOCTOR' %}
+      <section>
+          <br/> <br/>
+          <div class="container">
+              <div class="text-info text-center">
+                  <h1>BẠN KHÔNG CÓ QUYỀN TRUY CẬP</h1>
+              </div>
+          </div>
+          <br/> <br/>
+      </section>
+{% else %}
+  <body onload="getDateMM()"></body>
+  <section>
+      <div class="container mb-4">
+          <div class="mt-4">
+            <div class="d-flex justify-content-center">
+              <h1>ĐẶT LỊCH KHÁM</h1>
+            </div>
+          {% if err_msg %}
+          <div class="alert alert-danger">
+              <h2>{{ err_msg }}</h2>
+          </div>
+          {% endif %}
+            <form  name="theform" method="post">
+              <div class="form-group">
+                <label for="name">Họ tên khách hàng</label>
+                <input type="text" id="name" name="name"
+                  {% if current_user.name %} value="{{ current_user.name }}"
+                  {% else %} placeholder="Họ tên người khám"
+                  {% endif %}
+                  class="form-control form-control-danger" required
+                />
+              </div>
+              <div class="form-group">
+                <label for="tel">Số điện thoại</label>
+                <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" id="tel" name="tel" class="form-control form-control-danger" required maxlength="10" minlength="10"
+                  {% if current_user.phonenumber %} value="{{current_user.phonenumber}}"
+                          {% else %} placeholder="Điện thoại"
+                          {% endif %}/>
+              </div>
+              <div class="form-group">
+                <label for="address">Địa chỉ</label>
+                <input type="text" id="address" class="form-control" name="address"
+                {% if current_user.address %} value="{{ current_user.address }}"
+                {% else %} placeholder="Địa chỉ"
+                {% endif %} required>
+              </div>
+              <div class="form-inline w-100">
+                <div class="form-group w-75">
+                  <label for="birth" class="mr-2">Ngày sinh</label>
+                  <input class="form-control w-75" id="birth" name="birth" type="date"
+                  {% if current_user.yearofbirth %} value="{{current_user.yearofbirth }}"
+                  {% endif %} required>
+                </div>
+                <div class="form-group w-25">
+                  <label class="mr-2">Giới tính:</label>
+                    <input  checked="checked" type="radio" id="one" name="sex" value="Nam"/>
+                    <label for="one" class="mx-1">Nam</label>
+                    <input {% if current_user.is_authenticated and current_user.sex.name=='FEMALE' %} checked="checked"
+                           {% endif %}
+                           type="radio" id="two" name="sex" value="Nữ"/>
+                    <label for="two" class="mx-1">Nữ</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="doctor">Chọn bác sĩ:</label>
+                <select class="form-control" id="doctor" name="doctor">
+                  {% for doctor in doctors %}
+                  <option>{{ doctor.name }} </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="date">Chọn ngày khám</label>
+                <input class="form-control" id="date" name="date" type="date" required>
+              </div>
+              <div>
+                <input type="submit" id="submitbutton" onclick="confirmForm(event)" value="Submit" class="btn btn-primary">
+              </div>
+            </form>
+        </div>
+      </div>
+  </section>
+{% endif %}
+{% endblock %}

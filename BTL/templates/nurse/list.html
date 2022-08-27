@@ -1,0 +1,62 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Danh sách khám bệnh{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.user_role.name == 'NURSE' %}
+    <body onload="setDate();FirstLoad()"></body>
+    <section>
+        <div class="container my-4">
+            <div class="d-flex justify-content-center">
+                <h1 class="text-uppercase">Danh sách khám bệnh</h1>
+            </div>
+            <div>
+                <form class="form-inline">
+                    <label class="mr-3" for="date">Ngày khám</label>
+                    <input type="date" id="date" value="{{date}}" name="date" class="form-control w-75" placeholder="Vui lòng chọn ngày (dd/MM/yyyy)">
+                    <input type="submit" value="Tìm kiếm" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+        <div class="container-fluid mb-5">
+            <table class="table table-hover b">
+                <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Họ tên</th>
+                      <th scope="col">Giới tính</th>
+                      <th scope="col">Năm sinh</th>
+                      <th scope="col">Địa chỉ</th>
+                      <th scope="col">Ngày khám</th>
+                      <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in booking_list %}
+                    <tr>
+                      <th scope="row" class="count"></th>
+                      <td>{{ booking.name }}</td>
+                      <td>{{ booking.sex.name }}</td>
+                      <td>{{ booking.yearofbirth }}</td>
+                      <td>{{ booking.address }}</td>
+                      <td>{{ booking.ngaykham }}</td>
+                      <td><a href="{{url_for('delete_booking', booking_id=booking.id, date=date) }}"><input type="submit" id="submitbutton" onclick="confirmForm(event)" value="Xóa" class="button-75"></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{{url_for('user_booking')}}"><div class="d-flex justify-content-end container-fluid mb-3 m"><button class="button-75 button-75-custom"  role="button" id="confirm"><span class="text">Thêm phiếu</span></button></div></a>
+    </section>
+{% else %}
+    <section>
+          <br/> <br/>
+          <div class="container">
+              <div class="text-info text-center">
+                  <h1>BẠN KHÔNG CÓ QUYỀN TRUY CẬP</h1>
+              </div>
+          </div>
+          <br/> <br/>
+      </section>
+{% endif %}
+{% endblock %}

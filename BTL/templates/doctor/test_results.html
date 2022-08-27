@@ -1,0 +1,75 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Phiếu khám bệnh{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.user_role.name == 'DOCTOR' %}
+    <section>
+        <div class="d-flex justify-content-center my-5"><h1>Phiếu khám bệnh</h1></div>
+        <div class="container">
+            <form name="the-form-1" action="{{ url_for('test_results') }}">
+                <div class="form-group row justify-content-center form-inline">
+                        <label for="name" class="col-2">Họ tên:</label>
+                        <input class="form-control col-4" type="text" id="name" name="name" value="{{ booking.name }}" disabled>
+
+                        <label for="date" class="col-2">Ngày khám bệnh:</label>
+                        <input class="form-control col-4" type="date" id="date" name="name" value="{{ booking.ngaykham }}" disabled>
+                </div>
+                <div class="form-group row justify-content-center form-inline">
+                        <label for="symp" class="col-2">Triệu chứng:</label>
+                        <input class="form-control col-4" type="text" id="symp" name="trieu_chung"
+                            {% if phieu.trieuchung %} value="{{phieu.trieuchung}}"
+                            {% else %} placeholder="Triệu chứng của bệnh nhân"
+                            {% endif %} required>
+
+                        <label for="result" class="col-2">Dự đoán bệnh:</label>
+                        <input class="form-control col-4" type="text" id="result" name="benh"
+                            {% if phieu.dudoanloaibenh %} value="{{phieu.dudoanloaibenh}}"
+                            {% else %} placeholder="Bệnh của bệnh nhân"
+                            {% endif %} required>
+                        <input type="text" name="phieu_id" class="form-control col-4" value="{{ phieu_id }}" hidden>
+                        <input type="text" name="booking_id" class="form-control col-4" value="{{ booking_id }}" hidden>
+                        <td scope="col" class="col-sm-1" id="add"><input type="submit" value="Cập nhật" class="btn btn-danger"/></td>
+                </div>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <table class="table table-hover c" id="table-doctor">
+                <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" class="serial">STT</th>
+                      <th scope="col" class="col-sm-4">Thuốc</th>
+                      <th scope="col" class="col-sm-1">Đơn vị</th>
+                      <th scope="col" class="col-sm-1">Số lượng</th>
+                      <th scope="col" class="col-sm-4">Cách dùng</th>
+                      <th><a href="{{ url_for('prescription', booking_id=booking.id, phieu_id=phieu_id) }}"><button class="button-75" role="button" name="enter"><span class="text">Thêm</span></button></a></th>
+                    </tr>
+                    {% for p in prescription %}
+                    <tr id="row">
+                        <td scope = "row" class="count"></td>
+                        <td>{{ p[1] }}</td>
+                        <td>{{ p[2] }}</td>
+                        <td>{{ p[3] }}</td>
+                        <td>{{ p[4] }}</td>
+                        <td id="remove"><a href="{{url_for('delete_drugs_in_prescription', thuoc_id=p[0], phieu_id=phieu_id, booking_id=booking.id)}} "><button class="button-75" role="button" id="delete" onclick="DeleteRow(this)"><span class="text">Xoá</span></button></a></td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <a class="d-flex justify-content-end container-fluid mb-3 m" href="{{ url_for('tested_booking', booking_id=booking.id, phieu_id=phieu_id) }}"><button class="button-75 button-75-custom"  role="button" id="confirm"><span class="text">Xác nhận</span></button></a>
+    </section>
+{% else %}
+    <section>
+          <br/> <br/>
+          <div class="container">
+              <div class="text-info text-center">
+                  <h1>BẠN KHÔNG CÓ QUYỀN TRUY CẬP</h1>
+              </div>
+          </div>
+          <br/> <br/>
+      </section>
+{% endif %}
+{% endblock %}

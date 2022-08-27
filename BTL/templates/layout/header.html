@@ -1,0 +1,92 @@
+<header>
+  <div class="container header-top">
+    <div class="row">
+      <span class="hotline d-flex w-75">
+        <span class="ml-3 mt-1">
+          <p>phongkhamlingling@gmail.com</p>
+        </span>
+      </span>
+      <span class="w-25 mt-1 text-center">
+        <p>
+          09 999 999 999
+        </p>
+      </span>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-custom bg-dark flex-column align-content-start" id="nav">
+    <button class="navbar-toggler ml-5 border border-light rounded-circle" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="fas fa-ellipsis-h text-white text-right"></span>
+    </button>
+    <div class="ml-auto mr-auto nav-items-custom">
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav  ml-lg-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Trang chủ</a>
+        </li>
+
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link text-success" href="{{ url_for('home') }}">
+            {% if current_user.avatar %}
+              <img src="{{ current_user.avatar }}" class="rounded-circle" width="30" alt="{{ current_user.name}}"/>
+            {% else %}
+                <img src="{{ url_for('static', filename='/images/hero-bg.png') }}" class="rounded-circle" width="30" alt="{{ current_user.name}}"/>
+            {% endif %}
+            {{current_user.username}}
+          </a>
+        </li>
+
+        {% if current_user.user_role.name == 'USER'%}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('user_update') }}">Cập nhật thông tin cá nhân</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('user_history')}}">Xem lịch sử khám</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('user_booking')}}">Đặt lịch khám</a>
+        </li>
+        {% endif %}
+
+        {% if current_user.user_role.name == 'NURSE'%}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('confirm_booking')}}">Xác nhận phiếu đăng kí
+            <span class="badge badge-info">{{ count_register[1] }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('booking_list')}}">Lập danh sách</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('bill')}}">Thanh toán hóa đơn
+          <span class="badge badge-info">{{ count_bill[3] }}</span>
+        </a>
+        </li>
+        {% endif %}
+
+        {% if current_user.user_role.name == 'DOCTOR'%}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('testing_list')}}">Lập phiếu khám</a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-success" href="{{ url_for('user_signin') }}">Đăng nhập</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger" href="{{ url_for('user_register') }}">Đăng kí</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('user_booking')}}">Đặt lịch khám</a>
+        </li>
+        {% endif %}
+      </ul>
+      </div>
+    </div>
+  </nav>
+</header>

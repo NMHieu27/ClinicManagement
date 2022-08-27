@@ -1,0 +1,83 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+    {% if current_user.user_role.name == 'USER'%}
+        <section>
+            <br/> <br/>
+            <div class="container">
+                <div class="text-info text-center">
+                    <h1>CHỈNH SỬA HỒ SƠ BỆNH NHÂN</h1>
+                </div>
+            </div>
+            {% if err_msg %}
+                <div class="alert alert-danger">
+                    <h2>{{ err_msg }}</h2>
+                </div>
+            {% endif %}
+            <div class="container my-5">
+                <form method="post" action="{{ url_for('user_update') }}" class="was-validated" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">Họ tên</label>
+                        <input type="text" name="name" class="form-control" id="name"
+                        {% if current_user.name %} value="{{ current_user.name }}"
+                        {% else %} placeholder="Họ tên"
+                        {% endif %}/>
+                    </div>
+                    <div class="form-group">
+                        <label >Giới tính</label>
+                        <div class="d-flex sex">
+                            <div>
+                                <input {% if current_user.sex.name=='MALE' %} checked="checked" {% endif %} type="radio" id="male" name="sex" value="Nam"/>
+                                <label for="male">Nam</label><br>
+                            </div>
+                            <div>
+                                <input {% if current_user.sex.name=='FEMALE' %} checked="checked" {% endif %} type="radio" id="female" name="sex" value="Nữ"/>
+                                <label for="female">Nữ</label><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <input type="text" name="address" class="form-control" id="address"
+                        {% if current_user.address %} value="{{current_user.address}}"
+                        {% else %} placeholder="Địa chỉ"
+                        {% endif %}/>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">Số điện thoại</label>
+                        <input type="text" name="phonenumber" class="form-control" id="tel" minlength="10" maxlength="10"
+                        {% if current_user.phonenumber %} value="{{current_user.phonenumber}}"
+                        {% else %} placeholder="SDT"
+                        {% endif %} onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                    </div>
+                    <div class="form-group">
+                         <label for="birthday">Ngày sinh</label>
+                         <div>
+                            <input type="date" id="birthday" name="birth"
+                            {% if current_user.yearofbirth %} value="{{current_user.yearofbirth.strftime('%Y-%m-%d') }}"
+                            {% endif %}>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="avatar">Ảnh đại diện</label>
+                        <input type="file"
+                        name="avatar"
+                        class="form-control"
+                        id="avatar" />
+                    </div>
+                <br/>
+                <input type="submit" onclick="confirmForm(event)" value="Hoàn thành" class="btn btn-danger" />
+                </form>
+            </div>
+        </section>
+    {% else %}
+        <section>
+            <br/> <br/>
+            <div class="container">
+                <div class="text-info text-center">
+                    <h1>BẠN KHÔNG CÓ QUYỀN CHỈNH SỬA</h1>
+                </div>
+            </div>
+            <br/> <br/>
+        </section>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+    <div class="container my-4">
+        <div class="d-flex justify-content-center">
+            <h1 class="text-uppercase">Báo cáo sử dụng thuốc</h1>
+        </div>
+    </div>
+<section class="d-flex">
+    <div class="col-md-6 col-xs-12">
+        <table class="table table-hover a f table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                  <th colspan="2" class="text-right">Tháng:</th>
+                  <th colspan="3"><input disabled type="text" id="report-month" name="name" value="{{month}}" class="form-control w-60"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="bg-dark text-white">
+                  <td scope="col">STT</td>
+                  <td scope="col">Thuốc</td>
+                  <td scope="col">Đơn vị tính</td>
+                  <td scope="col">Số lượng</td>
+                  <td scope="col">Số lần dùng</td>
+                </tr>
+                {% for d in drugs_month %}
+                <tr>
+                  <td scope="row" id="serial"></td>
+                  <td>{{ d[1] }}</td>
+                  <td>{{ d[2] }}</td>
+                  <td>{{ d[3] }}</td>
+                  <td>{{ d[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+     <div class="col-md-6 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="number" min="1" max="12" name="month" class="form-control" placeholder="Nhập tháng..."/>
+            </div>
+            <input type="submit" value="Thống kê" class="btn btn-danger"/>
+        </form>
+        <div>
+            <canvas id="mydrugstats"></canvas>
+        </div>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = []
+    let data = []
+    let colors = []
+    let borderColors = []
+    let r, g, b;
+
+    {% for d in drugs_month %}
+        labels.push('{{ d[1] }}')
+        data.push({{ d[4] }})
+
+        r = Math.random()*255
+        g = Math.random()*255
+        b = Math.random()*255
+
+        colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+        borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endfor %}
+
+    window.onload = function() {
+        const ctx = document.getElementById('mydrugstats').getContext('2d');
+        displayChart(ctx, 'bar', labels, data, colors, borderColors)
+    }
+
+    function displayChart(ctx, typeChart, labels, data, colors, borderColors) {
+        const myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Báo cáo sử dụng thuốc',
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+<style>
+    table {
+        counter-reset: section;
+    }
+
+    table tbody tr #serial::before {
+        counter-increment: section;
+        content: counter(section);
+    }
+</style>
+{% endblock %}
